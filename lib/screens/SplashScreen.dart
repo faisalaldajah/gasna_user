@@ -1,21 +1,54 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:gasna_user/brand_colors.dart';
 import 'package:gasna_user/screens/mainpage.dart';
+import 'package:gasna_user/brand_colors.dart';
+import 'package:lottie/lottie.dart';
 
-class SplashScreen extends StatelessWidget {
-  static const String id = 'splash screen';
+class SplashScreen extends StatefulWidget  {
+  static const String id = 'splash_screen';
+
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  //final animationController = useAnimationController();
+  @override
+  void initState() {
+    //set time to load the new page
+    Future.delayed(Duration(seconds: 4),() {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainPage()));
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [        
-        AnimatedSplashScreen(
-          splash: 'images/gasna.png',
-          splashIconSize: 150,
-          nextScreen: MainPage(),
-          splashTransition: SplashTransition.rotationTransition,
+    return Scaffold(
+      backgroundColor: BrandColors.colorAccent,
+      body: Center(
+        child: Container(
+          height: 500,
+          width: 500,
+          child: Center(
+            child: Lottie.asset(
+              'assets/lottiefile.json',
+              repeat: true,
+              reverse: false,
+              animate: true,
+
+              //controller: useAnimationController(),
+              // onLoaded: (composition){
+              //   animationController.addStatusListener((status) {
+              //     if (status == AnimationStatus.completed) {
+              //       var model;
+              //       model.indicateAnimationComplete();
+              //     }
+              //   });
+              // },
+            ),
+          ),
         ),
-      ],
+      ),
     );
   }
 }

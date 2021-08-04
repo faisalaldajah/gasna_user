@@ -217,6 +217,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           }
 
                           registerUser();
+                          //todo check this code
+                          // if(login !=null){
+                          //   Navigator.pushNamed(context, SplashScreen.id);
+                          // }
                         },
                       ),
                     ],

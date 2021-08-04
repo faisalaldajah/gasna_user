@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gasna_user/screens/SplashScreen.dart';
 import 'package:gasna_user/screens/mainpage.dart';
 import 'package:gasna_user/screens/registrationpage.dart';
 import 'package:gasna_user/widgets/GradientButton.dart';
@@ -150,6 +151,10 @@ class _LoginPageState extends State<LoginPage> {
                           }
 
                           login();
+                          //todo check this code
+                          // if(login !=null){
+                          //   Navigator.pushNamed(context, SplashScreen.id);
+                          // }
                         },
                       ),
                     ],

@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         initialRoute:
-            (currentFirebaseUser == null) ? LoginPage.id : MainPage.id,
+            (currentFirebaseUser == null) ? LoginPage.id : SplashScreen.id,
         routes: {
           SplashScreen.id: (context) => SplashScreen(),
           RegistrationPage.id: (context) => RegistrationPage(),
