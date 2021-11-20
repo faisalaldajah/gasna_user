@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gasna_user/globalvariable.dart';
 import 'package:gasna_user/screens/Support.dart';
+import 'package:gasna_user/screens/searchpage.dart';
 import 'package:gasna_user/styles/styles.dart';
 import 'package:gasna_user/widgets/Rate.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
@@ -35,13 +37,10 @@ class TheDrawer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'User Name',
+                      currentUserInfo.fullName,
                       style: TextStyle(fontSize: 20, fontFamily: 'Brand-Bold'),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text('View Profile'),
                   ],
                 )
               ],
@@ -74,9 +73,13 @@ class TheDrawer extends StatelessWidget {
             'Ride History',
             style: kDrawerItemStyle,
           ),
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SearchPage()));
+          },
         ),
         ListTile(
-          onTap: (){
+          onTap: () {
             Navigator.pop(context);
             Navigator.push(
               context,

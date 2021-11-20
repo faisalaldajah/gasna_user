@@ -163,7 +163,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    HelperMethods.getCurrentUserInfo();
+    
     getPromoCode();
   }
 
@@ -873,7 +873,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       _markers.add(pickupMarker);
       _markers.add(destinationMarker);
     });
-
     Circle pickupCircle = Circle(
       circleId: CircleId('pickup'),
       strokeColor: Colors.green,
@@ -882,7 +881,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       center: pickLatLng,
       fillColor: BrandColors.colorMoreBlue,
     );
-
     Circle destinationCircle = Circle(
       circleId: CircleId('destination'),
       strokeColor: BrandColors.colorAccentPurple,
@@ -891,7 +889,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       center: destinationLatLng,
       fillColor: BrandColors.colorAccentPurple,
     );
-
     setState(() {
       _circles.add(pickupCircle);
       _circles.add(destinationCircle);

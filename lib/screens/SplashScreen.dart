@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gasna_user/screens/mainpage.dart';
+import 'package:gasna_user/screens/StartPage.dart';
 import 'package:gasna_user/brand_colors.dart';
 import 'package:lottie/lottie.dart';
 
-class SplashScreen extends StatefulWidget  {
+class SplashScreen extends StatefulWidget {
   static const String id = 'splash_screen';
 
   @override
@@ -15,8 +15,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     //set time to load the new page
-    Future.delayed(Duration(seconds: 4),() {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainPage()));
+    Future.delayed(Duration(seconds: 4), () {
+      Navigator.pushNamedAndRemoveUntil(
+          context, StartPage.id, (route) => false);
     });
     super.initState();
   }

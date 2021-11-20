@@ -3,12 +3,14 @@ import 'dart:math';
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 import 'package:gasna_user/dataprovider/appdata.dart';
 import 'package:gasna_user/globalvariable.dart';
 import 'package:gasna_user/helpers/requesthelper.dart';
 import 'package:gasna_user/models/address.dart';
 import 'package:gasna_user/models/directiondetails.dart';
 import 'package:gasna_user/models/user.dart';
+import 'package:gasna_user/screens/mainpage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +23,7 @@ double baseFare = 7;
 double comssion = 0.25;
 
 class HelperMethods {
-  static void getCurrentUserInfo() async {
+  static void getCurrentUserInfo(context) async {
     // ignore: await_only_futures
     currentFirebaseUser = await FirebaseAuth.instance.currentUser;
     String userid = currentFirebaseUser.uid;
@@ -31,7 +33,8 @@ class HelperMethods {
     userRef.once().then((DataSnapshot snapshot) {
       if (snapshot.value != null) {
         currentUserInfo = UserDetails.fromSnapshot(snapshot);
-        print('my name is ${currentUserInfo.fullName}');
+        Navigator.pushNamedAndRemoveUntil(
+            context, MainPage.id, (route) => false);
       }
     });
   }
