@@ -1,3 +1,4 @@
+// ignore_for_file: equal_keys_in_map
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:gasna_user/dataprovider/appdata.dart';
 import 'package:gasna_user/globalvariable.dart';
 import 'package:gasna_user/screens/PhoneLogin/screens/loginpage.dart';
 import 'package:gasna_user/screens/SplashScreen.dart';
+import 'package:gasna_user/screens/StartPage.dart';
 import 'package:gasna_user/screens/loginpage.dart';
 import 'package:gasna_user/screens/mainpage.dart';
 import 'package:gasna_user/screens/registrationpage.dart';
@@ -32,13 +34,14 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         initialRoute:
-            (currentFirebaseUser == null) ? LoginScreens.id : SplashScreen.id,
+            (currentFirebaseUser == null) ? LoginPages.id : SplashScreen.id,
         routes: {
           SplashScreen.id: (context) => SplashScreen(),
           RegistrationPage.id: (context) => RegistrationPage(),
           LoginPage.id: (context) => LoginPage(),
           MainPage.id: (context) => MainPage(),
-          LoginScreens.id: (context) => LoginScreens(),
+          LoginPages.id: (context) => LoginPages(),
+          StartPage.id: (context) => StartPage(),
         },
       ),
     );

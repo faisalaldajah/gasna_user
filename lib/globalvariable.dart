@@ -12,7 +12,7 @@ final CameraPosition googlePlex = CameraPosition(
   target: LatLng(31.954066, 35.931066),
   zoom: 14.4746,
 );
-
+List<String> places = [];
 User currentFirebaseUser;
 
 UserDetails currentUserInfo;

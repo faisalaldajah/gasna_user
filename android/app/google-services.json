@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:386676836015:android:99e1b4f0413d8040fef65a",
+        "android_client_info": {
+          "package_name": "wetech.admin_panel_gasna.admin_panel_gasna"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "386676836015-a0u4nscgp4s1sjb5i40qi1b9v3qv24qe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaQe4nuZ_6UW6InMwRmYg8iRYWJRXzI5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "386676836015-a0u4nscgp4s1sjb5i40qi1b9v3qv24qe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:386676836015:android:c9c103945b6c070ffef65a",
         "android_client_info": {
           "package_name": "wetech.gasna_driver"
@@ -44,7 +73,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "386676836015-206ju21gh593ssefa9ed2rqo21h2rcpv.apps.googleusercontent.com",
+          "client_id": "386676836015-1vmbol55gkbljrvsq4s485m1uckanpv0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "wetech.gasna_user",
+            "certificate_hash": "f800c74640a65320437da6233522c67c9333945d"
+          }
+        },
+        {
+          "client_id": "386676836015-3c51esldvecn7jgnhm1slephhd5ttmkj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "wetech.gasna_user",

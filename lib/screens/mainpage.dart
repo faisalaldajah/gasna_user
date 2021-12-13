@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
@@ -47,12 +49,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Completer<GoogleMapController> _controller = Completer();
   GoogleMapController mapController;
   double mapBottomPadding = 0;
-
+  var driverType;
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> _polylines = {};
   Set<Marker> _markers = {};
   Set<Circle> _circles = {};
-
   BitmapDescriptor nearbyIcon;
   var promoCodeController = TextEditingController();
   var geoLocator = Geolocator();
@@ -163,7 +164,6 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    
     getPromoCode();
   }
 
@@ -348,10 +348,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                         SizedBox(
                           height: 20,
                         ),
+                        //TODO
                         GradientButton(
                           title: 'أطلب الأن',
                           onPressed: () async {
-                            finishCode = random.nextInt(9999);
+                            print(
+                                'value: ${setDriverType(currentUserInfo.homePlaceName)}');
+                            /*finishCode = random.nextInt(9999);
                             if (await Permission
                                 .locationWhenInUse.serviceStatus.isEnabled) {
                               print('object');
@@ -366,7 +369,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                               );
                               promoCodeController.clear();
                               FocusScope.of(context).requestFocus(FocusNode());
-                            }
+                            }*/
                           },
                         ),
                         SizedBox(
@@ -432,7 +435,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                                     'سيارة الغاز',
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(
-                                        fontSize: 18,),
+                                      fontSize: 18,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -895,8 +899,29 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
   }
 
+  //TODO
+  String setDriverType(String setPlace) {
+    DatabaseReference userRef = FirebaseDatabase.instance
+        .reference()
+        .child('driversAvailable/${currentUserInfo.governorate}');
+    userRef.once().then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        print(snapshot.value['homePlaceName']);
+        for (var value in snapshot.value) {
+          print(snapshot.value['homePlaceName']);
+          print(value['homePlaceName']);
+          setPlace = snapshot.value['homePlaceName'];
+          if (setPlace.contains(currentUserInfo.homePlaceName)) {
+            return setPlace;
+          }
+        }
+      }
+    });
+  }
+
   void startGeofireListener() {
-    Geofire.initialize('driversAvailable');
+    Geofire.initialize(
+        'driversAvailable/${currentUserInfo.governorate}/${setDriverType(currentUserInfo.homePlaceName)}');
     Geofire.queryAtLocation(
             currentPosition.latitude, currentPosition.longitude, 20)
         .listen((map) {

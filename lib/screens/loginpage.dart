@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gasna_user/screens/SplashScreen.dart';
-import 'package:gasna_user/screens/mainpage.dart';
+import 'package:gasna_user/screens/StartPage.dart';
 import 'package:gasna_user/screens/registrationpage.dart';
 import 'package:gasna_user/widgets/GradientButton.dart';
 import 'package:gasna_user/widgets/ProgressDialog.dart';
@@ -37,6 +36,8 @@ class _LoginPageState extends State<LoginPage> {
 
   var passwordController = TextEditingController();
 
+  var placeController = TextEditingController();
+
   void login() async {
     //show please wait dialog
     showDialog(
@@ -46,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
         status: 'Logging you in',
       ),
     );
-
     final User user = (await _auth
             .signInWithEmailAndPassword(
       email: emailController.text,
@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
       userRef.once().then((DataSnapshot snapshot) {
         if (snapshot.value != null) {
           Navigator.pushNamedAndRemoveUntil(
-              context, MainPage.id, (route) => false);
+              context, StartPage.id, (route) => false);
         }
       });
     }
@@ -115,6 +115,20 @@ class _LoginPageState extends State<LoginPage> {
                       TextField(
                         controller: passwordController,
                         obscureText: true,
+                        decoration: InputDecoration(
+                            labelText: 'Password',
+                            labelStyle: TextStyle(
+                              fontSize: 14.0,
+                            ),
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 10.0)),
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextField(
+                        controller: placeController,
                         decoration: InputDecoration(
                             labelText: 'Password',
                             labelStyle: TextStyle(
