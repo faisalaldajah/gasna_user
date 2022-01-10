@@ -34,13 +34,13 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         initialRoute:
-            (currentFirebaseUser == null) ? LoginPages.id : SplashScreen.id,
+            (currentFirebaseUser == null) ? LoginScreens.id : SplashScreen.id,
         routes: {
           SplashScreen.id: (context) => SplashScreen(),
           RegistrationPage.id: (context) => RegistrationPage(),
           LoginPage.id: (context) => LoginPage(),
           MainPage.id: (context) => MainPage(),
-          LoginPages.id: (context) => LoginPages(),
+          LoginScreens.id: (context) => LoginScreens(),
           StartPage.id: (context) => StartPage(),
         },
       ),

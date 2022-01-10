@@ -1,304 +1,292 @@
-import 'dart:async';
-import 'package:gasna_user/Screens/PhoneLogin/services/authservice.dart';
-import 'package:gasna_user/Widgets/GradientButton.dart';
+// ignore_for_file: constant_identifier_names, use_key_in_widget_constructors, prefer_final_fields, prefer_const_literals_to_create_immutables
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gasna_user/brand_colors.dart';
+import 'package:gasna_user/globalvariable.dart';
 import 'package:gasna_user/screens/StartPage.dart';
+import 'package:gasna_user/widgets/CustomizedTextField.dart';
+import 'package:gasna_user/widgets/GradientButton.dart';
 
-class LoginPages extends StatefulWidget {
-  static const String id = 'login';
-  @override
-  _LoginPagesState createState() => _LoginPagesState();
+enum MobileVerificationState {
+  SHOW_MOBILE_FORM_STATE,
+  SHOW_OTP_FORM_STATE,
 }
 
-class _LoginPagesState extends State<LoginPages> {
-  final formKey = new GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  String phoneNo, verificationId, smsCode;
+class LoginScreens extends StatefulWidget {
+  static const String id = 'logins';
+  @override
+  _LoginScreensState createState() => _LoginScreensState();
+}
 
-  bool codeSent = false;
-  String governorate;
-  String homePlaceName;
-  var otpKey;
+class _LoginScreensState extends State<LoginScreens> {
+  MobileVerificationState currentState =
+      MobileVerificationState.SHOW_MOBILE_FORM_STATE;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final phoneController = TextEditingController();
+  final otpController = TextEditingController();
   CountryCode countryCode;
-  Timer _timer;
-  int _start = 60;
+  FirebaseAuth _auth = FirebaseAuth.instance;
   var fullNameController = TextEditingController();
+  String verificationId;
+  bool showLoading = false;
 
-  var placeController = TextEditingController();
+  void signInWithPhoneAuthCredential(
+      PhoneAuthCredential phoneAuthCredential) async {
+    setState(() {
+      showLoading = true;
+    });
+    try {
+      final authCredential =
+          await _auth.signInWithCredential(phoneAuthCredential);
+      setState(() {
+        showLoading = false;
+      });
+      if (authCredential?.user != null) {
+        DatabaseReference newUserRef = FirebaseDatabase.instance.reference();
+        Map userMap = {
+          'fullname': fullNameController.text,
+          'phone': '$countryCode${checkNumber(phoneController.text)}',
+        };
+        newUserRef.child('users/${authCredential.user.uid}').set(userMap);
+        Navigator.pushNamedAndRemoveUntil(
+            context, StartPage.id, (route) => false);
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        showLoading = false;
+      });
+      displayToastMessage(e.message, context);
+    }
+  }
 
-  var phoneController = TextEditingController();
+  getMobileFormWidget(context) {
+    return Scaffold(
+      body: SafeArea(
+        child: ListView(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(
+                    alignment: Alignment.center,
+                    height: 50.0,
+                    width: 50.0,
+                    image: AssetImage('images/gasna.png'),
+                  ),
+                  SizedBox(width: 15),
+                  Text(
+                    'غازنا',
+                    style: TextStyle(
+                      color: BrandColors.colorAccent,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(height: 40),
+            SvgPicture.asset(
+              'images/undraw_access_account_re_8spm.svg',
+              width: MediaQuery.of(context).size.width * 0.7,
+            ),
+            SizedBox(height: 50),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomizedTextField(
+                  controller: fullNameController,
+                  hint: 'الاسم الكامل',
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: BrandColors.lightGrey.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: CountryCodePicker(
+                        dialogTextStyle: TextStyle(color: Colors.black),
+                        dialogBackgroundColor: Colors.white,
+                        barrierColor: Colors.grey[300],
+                        textStyle: TextStyle(color: Colors.black),
+                        initialSelection: 'JO',
+                        showCountryOnly: false,
+                        showOnlyCountryWhenClosed: false,
+                        favorite: ['+962', 'JO'],
+                        showFlagMain: true,
+                        onChanged: (value) {
+                          countryCode = value;
+                        },
+                        onInit: (value) {
+                          countryCode = value;
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Flexible(
+                      child: CustomizedTextField(
+                        controller: phoneController,
+                        hint: 'رقم الهاتف',
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                GradientButton(
+                  onPressed: () async {
+                    setState(() {
+                      showLoading = true;
+                    });
 
-  void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _start--;
-          });
-        }
-      },
+                    await _auth.verifyPhoneNumber(
+                      phoneNumber:
+                          '$countryCode${checkNumber(phoneController.text)}',
+                      verificationCompleted: (phoneAuthCredential) async {
+                        setState(() {
+                          showLoading = false;
+                        });
+                      },
+                      verificationFailed: (verificationFailed) async {
+                        setState(() {
+                          showLoading = false;
+                        });
+                        displayToastMessage(
+                            verificationFailed.message, context);
+                      },
+                      codeSent: (verificationId, resendingToken) async {
+                        setState(() {
+                          showLoading = false;
+                          currentState =
+                              MobileVerificationState.SHOW_OTP_FORM_STATE;
+                          this.verificationId = verificationId;
+                        });
+                      },
+                      codeAutoRetrievalTimeout: (verificationId) async {},
+                    );
+                  },
+                  title: "تأكيد",
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
     );
   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
+  getOtpFormWidget(context) {
+    return ListView(
+      children: [
+        SizedBox(height: 50),
+        CustomizedTextField(
+          controller: otpController,
+          hint: 'ادخل الرمز',
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        GradientButton(
+          onPressed: () async {
+            PhoneAuthCredential phoneAuthCredential =
+                PhoneAuthProvider.credential(
+                    verificationId: verificationId,
+                    smsCode: otpController.text);
+
+            signInWithPhoneAuthCredential(phoneAuthCredential);
+          },
+          title: "تأكيد",
+        ),
+        SizedBox(height: 80),
+        SvgPicture.asset(
+          'images/undraw_access_account_re_8spm.svg',
+          width: MediaQuery.of(context).size.width * 0.7,
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      body: Form(
-          key: formKey,
-          child: ListView(
-            children: [
-              SizedBox(
-                height: 50,
-              ),
-              Image(
-                alignment: Alignment.center,
-                height: 160.0,
-                width: 160.0,
-                image: AssetImage('images/gasna.png'),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Row(
-                children: [
-                  CountryCodePicker(
-                    initialSelection: 'JO',
-                    showCountryOnly: false,
-                    showOnlyCountryWhenClosed: false,
-                    favorite: ['+962', 'JO'],
-                    showFlagMain: true,
-                    onInit: (value) {
-                      countryCode = value;
-                    },
-                    onChanged: (value) {
-                      countryCode = value;
-                    },
-                  ),
-                  Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                      child: TextFormField(
-                        controller: phoneController,
-                        keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
-                          hintText: 'رقم الهاتق',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 30),
-                child: TextFormField(
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(hintText: 'الاسم الكامل'),
-                  controller: fullNameController,
-                ),
-              ),
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 30),
-                  child: DropdownButton<String>(
-                    value: governorate,
-                    hint: Text('المحافظة'),
-                    onChanged: (value) {
-                      setState(() {
-                        //homePlaceName = '';
-                        governorate = value;
-                      });
-                    },
-                    items:
-                        <String>['عمان', 'الكرك'].map<DropdownMenuItem<String>>(
-                      (String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ),
-              ),
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 30),
-                  child: (governorate == 'الكرك')
-                      ? DropdownButton<String>(
-                          value: homePlaceName,
-                          hint: Text('المنطقة'),
-                          onChanged: (value) {
-                            setState(() {
-                              homePlaceName = value;
-                            });
-                          },
-                          items: <String>['زحوم', 'الثنية', 'المرج', 'المزار']
-                              .map<DropdownMenuItem<String>>(
-                            (String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            },
-                          ).toList(),
-                        )
-                      : DropdownButton<String>(
-                          value: homePlaceName,
-                          hint: Text('المنطقة'),
-                          onChanged: (value) {
-                            setState(() {
-                              homePlaceName = value;
-                              //print(homePlaceName);
-                            });
-                          },
-                          items: <String>[
-                            'طبربور',
-                            'ماركا',
-                            'الهاشمي',
-                            'جبل الحسين'
-                          ].map<DropdownMenuItem<String>>(
-                            (String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            },
-                          ).toList(),
-                        ),
-                ),
-              ),
-              codeSent ? Center(child: Text('$_start')) : Container(),
-              SizedBox(height: 30),
-              codeSent
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          hintText: (otpKey == null) ? 'ادخل الرمز' : otpKey,
-                        ),
-                        onChanged: (val) {
-                          setState(() {
-                            this.smsCode = val;
-                          });
-                        },
-                      ))
-                  : Container(),
-              SizedBox(height: 20),
-              Padding(
-                padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                child: GradientButton(
-                  title: codeSent ? 'تسجيل' : 'تأكيد',
-                  onPressed: () {
-                    codeSent
-                        ? AuthService().signInWithOTP(smsCode, verificationId)
-                        : verifyPhone(
-                            phoneController.text, countryCode.toString());
-                  },
-                ),
-              ),
-              SizedBox(height: 50),
-            ],
-          )),
-    );
-  }
-
-  void showSnackBar(String title) {
-    final snackbar = SnackBar(
-      content: Text(
-        title,
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 15),
+      body: Container(
+        child: showLoading
+            ? Center(child: CircularProgressIndicator())
+            : currentState == MobileVerificationState.SHOW_MOBILE_FORM_STATE
+                ? getMobileFormWidget(context)
+                : getOtpFormWidget(context),
+        padding: EdgeInsets.all(18),
       ),
     );
-    // ignore: deprecated_member_use
-    scaffoldKey.currentState.showSnackBar(snackbar);
   }
 
-//verifyPhone(phoneNo);
-//print('$otpKey${phoneController.text}');
-  Future<void> verifyPhone(var phoneNo, var otp) async {
-    if (homePlaceName == '') {
-      showSnackBar('أختر منطقة');
-      return;
+  // ignore: missing_return
+  String checkNumber(String phone) {
+    if (phone.startsWith('0')) {
+      displayToastMessage('احذف الصفر في بداية الرقم', context);
+    } else if (phone.length > 9) {
+      displayToastMessage('يجب ان يحتوي رقم الهاتف على 9 ارقام', context);
+    } else if (!phone.contains('79') &&
+        !phone.contains('78') &&
+        !phone.contains('77')) {
+      displayToastMessage('يجب ان يحتوي رقم الهاتف رمز مزود الخدمة', context);
+    } else {
+      return phone;
     }
-    if (governorate == '') {
-      showSnackBar('أختر محافظة');
-      return;
-    }
-    if (fullNameController.text == null) {
-      showSnackBar('خانة الاسم فارغة');
-      return;
-    }
-    startTimer();
-    var phoneNumber = '$otp$phoneNo';
-    final PhoneVerificationCompleted verified =
-        (PhoneAuthCredential credential) async {
-      await FirebaseAuth.instance
-          .signInWithCredential(credential)
-          .then((value) async {
-        if (value.user != null) {
-          otpKey = credential.smsCode;
-          print('otpkey: $otpKey');
-          DatabaseReference newUserRef = FirebaseDatabase.instance.reference();
+  }
+}
 
-          //Prepare data to be saved on users table
-          Map userMap = {
-            'fullname': fullNameController.text,
-            'phone': phoneNumber,
-            'governorate': governorate,
-            'homePlaceName': homePlaceName
-          };
+class HomePlaceButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final String title;
+  const HomePlaceButton({
+    Key key,
+    @required this.onTap,
+    @required this.title,
+  }) : super(key: key);
 
-          newUserRef.child('users/${value.user.uid}').set(userMap);
-          fullNameController.clear();
-          phoneController.clear();
-          Navigator.pushNamed(context, StartPage.id);
-        }
-      });
-    };
-
-    final PhoneVerificationFailed verificationfailed =
-        (FirebaseAuthException authException) {
-      print('authException: ${authException.message}');
-    };
-
-    final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
-      this.verificationId = verId;
-      print('object: $verificationId');
-      setState(() {
-        this.codeSent = true;
-      });
-    };
-
-    final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
-      this.verificationId = verId;
-      print('object: $verificationId');
-    };
-
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      timeout: const Duration(seconds: 60),
-      verificationCompleted: verified,
-      verificationFailed: verificationfailed,
-      codeSent: smsSent,
-      codeAutoRetrievalTimeout: autoTimeout,
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.width * 0.15,
+      decoration: BoxDecoration(
+        border: Border.all(width: 0.9, color: Colors.grey),
+        borderRadius: BorderRadius.circular(40),
+      ),
+      child: Material(
+        borderRadius: BorderRadius.circular(40),
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(40),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(17.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                Icon(Icons.arrow_drop_down)
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

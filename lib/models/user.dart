@@ -22,7 +22,7 @@ class UserDetails {
     phone = snapshot.value['phone'];
     email = snapshot.value['email'];
     fullName = snapshot.value['fullname'];
-    homePlaceName = snapshot.value['homePlaceName'];
+    homePlaceName = snapshot.value['place'];
     governorate = snapshot.value['governorate'];
   }
 }

@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
-class BrandColors{
-
+class BrandColors {
   static const Color colorPrimary = Color(0xFF2B1A64);
   static const Color colorPrimaryDark = Color(0xFF1c3aa9);
   static const Color colorAccent = Color(0xFF54a0ff);
   static const Color colorAccent1 = Color(0xFF2e86de);
-
+  static const Color lightGrey = Color(0xffADADAF);
   static const Color colorBackground = Color(0xFFFBFAFF);
 
   static const Color colorPink = Color(0xFFE66C75);
   static const Color colorOrange = Color(0xFFE8913A);
   static const Color colorBlue = Color(0xFF2254A3);
   static const Color colorAccentPurple = Color(0xFF4f5cd1);
-
-
 
   static const Color colorText = Color(0xFF383635);
   static const Color colorTextLight = Color(0xFF918D8D);
@@ -25,7 +22,4 @@ class BrandColors{
   static const Color colorLightGray = Color(0xFFe2e2e2);
   static const Color colorLightGrayFair = Color(0xFFe1e5e8);
   static const Color colorDimText = Color(0xFFadadad);
-
-
-
 }

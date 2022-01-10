@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'models/user.dart';
@@ -12,9 +14,19 @@ final CameraPosition googlePlex = CameraPosition(
   target: LatLng(31.954066, 35.931066),
   zoom: 14.4746,
 );
-List<String> places = [];
+List<String> places = ['عمان', 'الكرك'];
+
 User currentFirebaseUser;
-
+List<String> karak = ['الثنية زحوم', 'المرج الثنية'];
+List<String> amman = ['ماركا طبربور', 'الهاشمي طبربور'];
 UserDetails currentUserInfo;
-
+//make it to call list view bulder and the switch will do the rest of work
 int numberOfGas = 1;
+
+bool placeSet = false;
+
+String governatsPlace = 'المحافظة';
+
+displayToastMessage(String message, BuildContext context) {
+  Fluttertoast.showToast(msg: message);
+}

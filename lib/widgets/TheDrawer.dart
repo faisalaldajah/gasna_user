@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gasna_user/globalvariable.dart';
+import 'package:gasna_user/screens/PhoneLogin/screens/loginpage.dart';
 import 'package:gasna_user/screens/Support.dart';
 import 'package:gasna_user/screens/searchpage.dart';
 import 'package:gasna_user/styles/styles.dart';
 import 'package:gasna_user/widgets/Rate.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:share/share.dart';
 
 import 'BrandDivier.dart';
 
@@ -57,49 +60,38 @@ class TheDrawer extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Rate(),
-              ),
-            );
-          },
-          leading: Icon(OMIcons.cardGiftcard),
-          title: Text(
-            'Free Rides',
-            style: kDrawerItemStyle,
-          ),
-        ),
-        ListTile(
-          leading: Icon(OMIcons.history),
-          title: Text(
-            'Ride History',
-            style: kDrawerItemStyle,
-          ),
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => SearchPage()));
-          },
-        ),
-        ListTile(
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
                 builder: (context) => Support(),
               ),
             );
           },
           leading: Icon(OMIcons.contactSupport),
           title: Text(
-            'Support',
+            'الدعم',
             style: kDrawerItemStyle,
           ),
         ),
         ListTile(
           leading: Icon(OMIcons.info),
           title: Text(
-            'About',
+            'دعوة صدوق',
             style: kDrawerItemStyle,
           ),
+          onTap: () {
+            Share.share(
+                'https://play.google.com/store/apps/details?id=wetech.gasna_user');
+          },
+        ),
+        ListTile(
+          leading: Icon(OMIcons.history),
+          title: Text(
+            'Logout',
+            style: kDrawerItemStyle,
+          ),
+          onTap: () {
+            FirebaseAuth.instance.signOut();
+            Navigator.pushNamedAndRemoveUntil(
+                context, LoginScreens.id, (route) => false);
+          },
         ),
       ],
     );

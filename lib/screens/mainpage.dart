@@ -16,6 +16,7 @@ import 'package:gasna_user/models/nearbydriver.dart';
 import 'package:gasna_user/rideVaribles.dart';
 import 'package:gasna_user/widgets/BrandDivier.dart';
 import 'package:gasna_user/widgets/CollectPaymentDialog.dart';
+import 'package:gasna_user/widgets/CustomizedTextField.dart';
 import 'package:gasna_user/widgets/GradientButton.dart';
 import 'package:gasna_user/widgets/NoDriverDialog.dart';
 import 'package:gasna_user/widgets/PermissionLocation.dart';
@@ -40,10 +41,10 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  double searchSheetHeight = (Platform.isIOS) ? 300 : 275;
-  double rideDetailsSheetHeight = 0; // (Platform.isAndroid) ? 235 : 260
-  double requestingSheetHeight = 0; // (Platform.isAndroid) ? 195 : 220
-  double tripSheetHeight = 0; // (Platform.isAndroid) ? 275 : 300
+  double searchSheetHeight = (Platform.isIOS) ? 300 : 300;
+  double rideDetailsSheetHeight = 0;
+  double requestingSheetHeight = 0;
+  double tripSheetHeight = 0;
   Random random = new Random();
   var finishCode;
   Completer<GoogleMapController> _controller = Completer();
@@ -189,17 +190,15 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             initialCameraPosition: googlePlex,
             myLocationEnabled: true,
             zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
+            zoomControlsEnabled: false,
             polylines: _polylines,
             markers: _markers,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
               mapController = controller;
-
               setState(() {
                 mapBottomPadding = (Platform.isAndroid) ? 280 : 270;
               });
-
               setupPositionLocator();
             },
           ),
@@ -334,30 +333,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
-                        TextField(
+                        SizedBox(height: 20),
+                        CustomizedTextField(
                           controller: promoCodeController,
-                          decoration: InputDecoration(
-                              labelText: 'كود الخصم',
-                              labelStyle: TextStyle(
-                                fontSize: 14.0,
-                              ),
-                              hintStyle: TextStyle(
-                                  color: Colors.grey, fontSize: 10.0)),
-                          style: TextStyle(fontSize: 14),
+                          hint: 'كود الخصم',
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
+                        SizedBox(height: 20),
                         //TODO
                         GradientButton(
                           title: 'أطلب الأن',
                           onPressed: () async {
-                            print(
-                                'value: ${setDriverType(currentUserInfo.homePlaceName)}');
-                            /*finishCode = random.nextInt(9999);
+                            //testCase();
+                            print(currentUserInfo.homePlaceName);
+                            print(currentUserInfo.governorate);
+                            finishCode = random.nextInt(9999);
                             if (await Permission
                                 .locationWhenInUse.serviceStatus.isEnabled) {
-                              print('object');
                               showDetailSheet();
                               promoCodeValid();
                             } else {
@@ -369,7 +360,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                               );
                               promoCodeController.clear();
                               FocusScope.of(context).requestFocus(FocusNode());
-                            }*/
+                            }
                           },
                         ),
                         SizedBox(
@@ -900,34 +891,13 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   //TODO
-  String setDriverType(String setPlace) {
-    DatabaseReference userRef = FirebaseDatabase.instance
-        .reference()
-        .child('driversAvailable/${currentUserInfo.governorate}');
-    userRef.once().then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        print(snapshot.value['homePlaceName']);
-        for (var value in snapshot.value) {
-          print(snapshot.value['homePlaceName']);
-          print(value['homePlaceName']);
-          setPlace = snapshot.value['homePlaceName'];
-          if (setPlace.contains(currentUserInfo.homePlaceName)) {
-            return setPlace;
-          }
-        }
-      }
-    });
-  }
-
-  void startGeofireListener() {
-    Geofire.initialize(
-        'driversAvailable/${currentUserInfo.governorate}/${setDriverType(currentUserInfo.homePlaceName)}');
+  void startGeofireListener() async {
+    Geofire.initialize('driversAvailable');
     Geofire.queryAtLocation(
             currentPosition.latitude, currentPosition.longitude, 20)
         .listen((map) {
       if (map != null) {
         var callBack = map['callBack'];
-
         switch (callBack) {
           case Geofire.onKeyEntered:
             NearbyDriver nearbyDriver = NearbyDriver();
@@ -935,29 +905,22 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             nearbyDriver.latitude = map['latitude'];
             nearbyDriver.longitude = map['longitude'];
             FireHelper.nearbyDriverList.add(nearbyDriver);
-
             if (nearbyDriversKeysLoaded) {
               updateDriversOnMap();
             }
             break;
-
           case Geofire.onKeyExited:
             FireHelper.removeFromList(map['key']);
             updateDriversOnMap();
             break;
-
           case Geofire.onKeyMoved:
-            // Update your key's location
-
             NearbyDriver nearbyDriver = NearbyDriver();
             nearbyDriver.key = map['key'];
             nearbyDriver.latitude = map['latitude'];
             nearbyDriver.longitude = map['longitude'];
-
             FireHelper.updateNearbyLocation(nearbyDriver);
             updateDriversOnMap();
             break;
-
           case Geofire.onGeoQueryReady:
             nearbyDriversKeysLoaded = true;
             updateDriversOnMap();
