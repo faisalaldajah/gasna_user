@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   // ignore: await_only_futures
   currentFirebaseUser = await FirebaseAuth.instance.currentUser;
 

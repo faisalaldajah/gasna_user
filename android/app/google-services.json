@@ -73,27 +73,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "386676836015-3c51esldvecn7jgnhm1slephhd5ttmkj.apps.googleusercontent.com",
+          "client_id": "386676836015-m94s25ca0igsaubnue6lilcmcqv5nsjt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "wetech.gasna_user",
-            "certificate_hash": "04ca2998cff45c550917cd7e190d13551539ce1d"
-          }
-        },
-        {
-          "client_id": "386676836015-4gr7mnrg1kr6ft2779fbmse6aehltjnv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "wetech.gasna_user",
-            "certificate_hash": "fcd20de1a0a7e11b9f8ec18f837d41c431863650"
-          }
-        },
-        {
-          "client_id": "386676836015-ptph2h1tbr8c284ok66midk7tfj06qkr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "wetech.gasna_user",
-            "certificate_hash": "f800c74640a65320437da6233522c67c9333945d"
+            "certificate_hash": "2ecc4883cc3ea7e88a3ed2f2236431e4790c8179"
           }
         },
         {

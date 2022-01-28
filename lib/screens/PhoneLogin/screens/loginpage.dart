@@ -1,14 +1,20 @@
 // ignore_for_file: constant_identifier_names, use_key_in_widget_constructors, prefer_final_fields, prefer_const_literals_to_create_immutables
+import 'dart:convert';
+
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gasna_user/brand_colors.dart';
 import 'package:gasna_user/globalvariable.dart';
+import 'package:gasna_user/models/Regions.dart';
+import 'package:gasna_user/screens/SplashScreen.dart';
 import 'package:gasna_user/screens/StartPage.dart';
 import 'package:gasna_user/widgets/CustomizedTextField.dart';
 import 'package:gasna_user/widgets/GradientButton.dart';
+import 'package:gasna_user/widgets/TaxiButton.dart';
 
 enum MobileVerificationState {
   SHOW_MOBILE_FORM_STATE,
@@ -48,11 +54,13 @@ class _LoginScreensState extends State<LoginScreens> {
         DatabaseReference newUserRef = FirebaseDatabase.instance.reference();
         Map userMap = {
           'fullname': fullNameController.text,
-          'phone': '$countryCode${checkNumber(phoneController.text)}',
+          'phone': '$countryCode${checkData(phoneController.text)}',
+          'governatsPlace': governatsPlace,
+          'places': places,
         };
         newUserRef.child('users/${authCredential.user.uid}').set(userMap);
         Navigator.pushNamedAndRemoveUntil(
-            context, StartPage.id, (route) => false);
+            context, SplashScreen.id, (route) => false);
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -60,6 +68,12 @@ class _LoginScreensState extends State<LoginScreens> {
       });
       displayToastMessage(e.message, context);
     }
+  }
+
+  @override
+  void initState() {
+    getAllJsons();
+    super.initState();
   }
 
   getMobileFormWidget(context) {
@@ -82,7 +96,7 @@ class _LoginScreensState extends State<LoginScreens> {
                   Text(
                     'غازنا',
                     style: TextStyle(
-                      color: BrandColors.colorAccent,
+                      color: BrandColors.colorPrimaryDark,
                       fontSize: 30,
                       fontWeight: FontWeight.w700,
                     ),
@@ -92,7 +106,7 @@ class _LoginScreensState extends State<LoginScreens> {
             ),
             SizedBox(height: 40),
             SvgPicture.asset(
-              'images/undraw_access_account_re_8spm.svg',
+              'images/undraw_my_location_re_r52x.svg',
               width: MediaQuery.of(context).size.width * 0.7,
             ),
             SizedBox(height: 50),
@@ -103,13 +117,32 @@ class _LoginScreensState extends State<LoginScreens> {
                 CustomizedTextField(
                   controller: fullNameController,
                   hint: 'الاسم الكامل',
+                  textInputType: TextInputType.name,
+                ),
+                const SizedBox(height: 20),
+                TaxiButton(
+                  color: BrandColors.colorLightGray,
+                  onPressed: () {
+                    //regions.districts[0].districtAR.toString();
+                    chooseDistrectModalBottomSheet(context);
+                  },
+                  title: governatsPlace,
+                ),
+                const SizedBox(height: 20),
+                TaxiButton(
+                  color: BrandColors.colorLightGray,
+                  onPressed: () {
+                    //regions.districts[0].districtAR.toString();
+                    chooseCityModalBottomSheet(context);
+                  },
+                  title: places,
                 ),
                 const SizedBox(height: 20),
                 Row(
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: BrandColors.lightGrey.withOpacity(0.6),
+                        color: BrandColors.colorLightGray,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: CountryCodePicker(
@@ -135,6 +168,7 @@ class _LoginScreensState extends State<LoginScreens> {
                       child: CustomizedTextField(
                         controller: phoneController,
                         hint: 'رقم الهاتف',
+                        textInputType: TextInputType.number,
                       ),
                     ),
                   ],
@@ -148,7 +182,7 @@ class _LoginScreensState extends State<LoginScreens> {
 
                     await _auth.verifyPhoneNumber(
                       phoneNumber:
-                          '$countryCode${checkNumber(phoneController.text)}',
+                          '$countryCode${checkData(phoneController.text)}',
                       verificationCompleted: (phoneAuthCredential) async {
                         setState(() {
                           showLoading = false;
@@ -190,6 +224,7 @@ class _LoginScreensState extends State<LoginScreens> {
         CustomizedTextField(
           controller: otpController,
           hint: 'ادخل الرمز',
+          textInputType: TextInputType.name,
         ),
         const SizedBox(
           height: 20,
@@ -214,6 +249,140 @@ class _LoginScreensState extends State<LoginScreens> {
     );
   }
 
+  void chooseDistrectModalBottomSheet(context) {
+    showModalBottomSheet(
+        elevation: 5,
+        backgroundColor: Colors.white.withOpacity(0),
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(20.0),
+                  topRight: const Radius.circular(20.0),
+                ),
+              ),
+              child: Wrap(
+                children: <Widget>[
+                  Container(height: 10),
+                  Center(
+                    child: Container(
+                      height: 5,
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      decoration: BoxDecoration(
+                        color: BrandColors.colorPrimaryDark.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  Container(height: 15),
+                  Center(
+                    child: Text(
+                      'إختر المحافظة',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Container(height: 15),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: regions.districts.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(regions.districts[index].districtAR),
+                        onTap: () {
+                          setState(() {
+                            governatsPlace =
+                                regions.districts[index].districtAR;
+                            citys = regions.districts[index].cities;
+                            places = 'إختر المدينة';
+                          });
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void chooseCityModalBottomSheet(context) {
+    showModalBottomSheet(
+        elevation: 5,
+        backgroundColor: Colors.white.withOpacity(0),
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15),
+              ),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(20.0),
+                  topRight: const Radius.circular(20.0),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Container(height: 10),
+                    Center(
+                      child: Container(
+                        height: 5,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        decoration: BoxDecoration(
+                          color: BrandColors.colorPrimaryDark.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                    Container(height: 15),
+                    Center(
+                      child: Text(
+                        'إختر المدينة',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Container(height: 15),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: citys.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(citys[index].cityAR),
+                          onTap: () {
+                            setState(() {
+                              places = citys[index].cityAR;
+                            });
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,7 +398,7 @@ class _LoginScreensState extends State<LoginScreens> {
   }
 
   // ignore: missing_return
-  String checkNumber(String phone) {
+  String checkData(String phone) {
     if (phone.startsWith('0')) {
       displayToastMessage('احذف الصفر في بداية الرقم', context);
     } else if (phone.length > 9) {
@@ -238,6 +407,10 @@ class _LoginScreensState extends State<LoginScreens> {
         !phone.contains('78') &&
         !phone.contains('77')) {
       displayToastMessage('يجب ان يحتوي رقم الهاتف رمز مزود الخدمة', context);
+    } else if (places == 'إختر المدينة') {
+      displayToastMessage('يجب ان تختار موقع سكنك', context);
+    } else if (governatsPlace == 'إختر المحافظة') {
+      displayToastMessage('يجب ان تختار موقع سكنك', context);
     } else {
       return phone;
     }
@@ -289,4 +462,12 @@ class HomePlaceButton extends StatelessWidget {
       ),
     );
   }
+}
+
+void getAllJsons() async {
+  String jsonString;
+  jsonString = await rootBundle.loadString('assets/region.json');
+  Map<String, dynamic> jsonMap = json.decode(jsonString);
+  jsonMap = json.decode(jsonString);
+  regions = Regions.fromJson(jsonMap);
 }

@@ -277,10 +277,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           height: 5,
                         ),
                         Text(
-                          'مرحبا بك',
+                          'إختر عدد الاجرار المطلوبة',
                           textDirection: TextDirection.rtl,
                           style: TextStyle(fontSize: 20),
                         ),
+                        const SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

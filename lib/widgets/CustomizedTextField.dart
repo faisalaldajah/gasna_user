@@ -6,15 +6,17 @@ class CustomizedTextField extends StatelessWidget {
     Key key,
     @required this.controller,
     @required this.hint,
+    @required this.textInputType,
   }) : super(key: key);
 
   final TextEditingController controller;
   final String hint;
+  final TextInputType textInputType;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      keyboardType: TextInputType.name,
+      keyboardType: textInputType,
       textAlign: TextAlign.end,
       style: TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
@@ -30,7 +32,8 @@ class CustomizedTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: BrandColors.colorAccent, width: 1.2),
+          borderSide:
+              BorderSide(color: BrandColors.colorPrimaryDark, width: 1.2),
           borderRadius: BorderRadius.circular(10.0),
         ),
         errorBorder: OutlineInputBorder(

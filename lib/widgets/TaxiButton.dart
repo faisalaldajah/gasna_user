@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class TaxiButton extends StatelessWidget {
-
   final String title;
   final Color color;
   final Function onPressed;
@@ -14,8 +13,7 @@ class TaxiButton extends StatelessWidget {
     return RaisedButton(
       onPressed: onPressed,
       shape: new RoundedRectangleBorder(
-          borderRadius: new BorderRadius.circular(25)
-      ),
+          borderRadius: new BorderRadius.circular(25)),
       color: color,
       textColor: Colors.white,
       child: Container(
@@ -23,7 +21,10 @@ class TaxiButton extends StatelessWidget {
         child: Center(
           child: Text(
             title,
-            style: TextStyle(fontSize: 18, fontFamily: 'Brand-Bold'),
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+            ),
           ),
         ),
       ),

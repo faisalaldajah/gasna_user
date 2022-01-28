@@ -15,22 +15,22 @@ class _GradientButtonState extends State<GradientButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
-      height: 60,
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: 50,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(30),
         gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [
-              BrandColors.colorAccent,
-              BrandColors.colorAccent1,
+              BrandColors.colorPrimaryDark,
+              BrandColors.colorPrimaryDark,
             ]),
         boxShadow: [
           BoxShadow(
             blurRadius: 2,
             spreadRadius: 0.3,
-            color: BrandColors.colorMoreBlue,
+            color: BrandColors.colorPrimaryDark,
           ),
         ],
       ),
@@ -39,7 +39,7 @@ class _GradientButtonState extends State<GradientButton> {
         child: Text(
           widget.title,
           textDirection: TextDirection.rtl,
-          style: TextStyle(fontSize: 25,color: Colors.white),
+          style: TextStyle(fontSize: 25, color: Colors.white),
         ),
       ),
     );

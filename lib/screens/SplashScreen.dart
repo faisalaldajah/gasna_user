@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gasna_user/screens/StartPage.dart';
+import 'package:gasna_user/helpers/helpermethods.dart';
 import 'package:gasna_user/brand_colors.dart';
 import 'package:lottie/lottie.dart';
 
@@ -15,17 +15,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     //set time to load the new page
-    Future.delayed(Duration(seconds: 4), () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, StartPage.id, (route) => false);
-    });
+    HelperMethods.getCurrentUserInfo(context);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: BrandColors.colorAccent,
+      backgroundColor: BrandColors.colorBackground,
       body: Center(
         child: Container(
           height: 500,
@@ -36,16 +33,6 @@ class _SplashScreenState extends State<SplashScreen> {
               repeat: true,
               reverse: false,
               animate: true,
-
-              //controller: useAnimationController(),
-              // onLoaded: (composition){
-              //   animationController.addStatusListener((status) {
-              //     if (status == AnimationStatus.completed) {
-              //       var model;
-              //       model.indicateAnimationComplete();
-              //     }
-              //   });
-              // },
             ),
           ),
         ),

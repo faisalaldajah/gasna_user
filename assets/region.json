@@ -1,0 +1,136 @@
+{
+    "districts": [
+        {
+            "districtID": 0,
+            "districtAR": "عمان",
+            "cities": [
+                {
+                    "cityID": 0,
+                    "cityAR": "ابوعلندا"
+                },
+                {
+                    "cityID": 1,
+                    "cityAR": "ابونصير"
+                },
+                {
+                    "cityID": 2,
+                    "cityAR": "احد"
+                },
+                {
+                    "cityID": 3,
+                    "cityAR": "ام حيران"
+                },
+                {
+                    "cityID": 4,
+                    "cityAR": "الجيزة"
+                },
+                {
+                    "cityID": 5,
+                    "cityAR": "المقابلين"
+                },
+                {
+                    "cityID": 6,
+                    "cityAR": "النصر"
+                },
+                {
+                    "cityID": 7,
+                    "cityAR": "تلاع العلي"
+                },
+                {
+                    "cityID": 8,
+                    "cityAR": "طارق"
+                },
+                {
+                    "cityID": 9,
+                    "cityAR": "ام اذينة"
+                },
+                {
+                    "cityID": 10,
+                    "cityAR": "صويلح"
+                },
+                {
+                    "cityID": 11,
+                    "cityAR": "راس العين"
+                },
+                {
+                    "cityID": 12,
+                    "cityAR": "شفا بدران"
+                },
+                {
+                    "cityID": 13,
+                    "cityAR": "مرج الحمام"
+                },
+                {
+                    "cityID": 14,
+                    "cityAR": "وادي صقرة"
+                },
+                {
+                    "cityID": 15,
+                    "cityAR": "وادي السير"
+                },
+                {
+                    "cityID": 16,
+                    "cityAR": "وسط البلد"
+                },
+                {
+                    "cityID": 17,
+                    "cityAR": "عبدون"
+                },
+                {
+                    "cityID": 18,
+                    "cityAR": "العبدلي"
+                }
+            ]
+        },
+        {
+            "districtID": 1,
+            "districtAR": "الكرك",
+            "cities": [
+                {
+                    "cityID": 0,
+                    "cityAR": "الثنية"
+                },
+                {
+                    "cityID": 1,
+                    "cityAR": "زحوم"
+                },
+                {
+                    "cityID": 2,
+                    "cityAR": "الكرك"
+                },
+                {
+                    "cityID": 3,
+                    "cityAR": "العدنانية"
+                },
+                {
+                    "cityID": 4,
+                    "cityAR": "مدين"
+                },
+                {
+                    "cityID": 5,
+                    "cityAR": "الجديدة"
+                },
+                {
+                    "cityID": 6,
+                    "cityAR": "الشهابية"
+                },
+                {
+                    "cityID": 7,
+                    "cityAR": "العزيزية"
+                },
+                {
+                    "cityID": 8,
+                    "cityAR": "العباسية"
+                },
+                {
+                    "cityID": 9,
+                    "cityAR": "الزغرية"
+                },
+                {
+                    "cityID": 10,
+                    "cityAR": "القريفلة"
+                }
+            ]
+        }
+    ]
+}
