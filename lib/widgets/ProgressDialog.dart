@@ -3,7 +3,7 @@ import 'package:gasna_user/brand_colors.dart';
 
 class ProgressDialog extends StatelessWidget {
   final String status;
-  ProgressDialog({required this.status});
+  ProgressDialog({this.status});
 
   @override
   Widget build(BuildContext context) {

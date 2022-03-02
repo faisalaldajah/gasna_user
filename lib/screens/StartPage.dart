@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:gasna_user/helpers/helpermethods.dart';
 import 'package:gasna_user/widgets/ProgressDialog.dart';
 
 class StartPage extends StatefulWidget {

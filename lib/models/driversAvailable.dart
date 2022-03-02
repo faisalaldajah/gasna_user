@@ -1,4 +1,3 @@
-// ignore: unused_import
 import 'package:firebase_database/firebase_database.dart';
 
 class DriversAvailable {
@@ -16,7 +15,7 @@ class DriversAvailable {
     this.place,
   });
 
-  DriversAvailable.fromSnapshot(snapshot){
+  DriversAvailable.fromSnapshot(DataSnapshot snapshot){
     governorate = snapshot.value['governorate'];
     place = snapshot.value['governorate']['homePlaceName'];
   }

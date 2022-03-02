@@ -1,13 +1,12 @@
-// ignore: unused_import
 import 'package:firebase_database/firebase_database.dart';
 
 class UserDetails {
-  String? fullName;
-  String? email;
-  String? phone;
-  String? id;
-  String? homePlaceName;
-  String? governorate;
+  String fullName;
+  String email;
+  String phone;
+  String id;
+  String homePlaceName;
+  String governorate;
 
   UserDetails({
     this.email,
@@ -18,12 +17,12 @@ class UserDetails {
     this.governorate,
   });
 
-  UserDetails.fromSnapshot(event) {
-    id = event.key;
-    phone = event.value['phone'];
-    email = event.value['email'];
-    fullName = event.value['fullname'];
-    homePlaceName = event.value['place'];
-    governorate = event.value['governorate'];
+  UserDetails.fromSnapshot(DataSnapshot snapshot) {
+    id = snapshot.key;
+    phone = snapshot.value['phone'];
+    email = snapshot.value['email'];
+    fullName = snapshot.value['fullname'];
+    homePlaceName = snapshot.value['place'];
+    governorate = snapshot.value['governorate'];
   }
 }

@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:gasna_user/brand_colors.dart';
 
 class CustomizedTextField extends StatelessWidget {
-  const CustomizedTextField({
-    Key? key,
-    required this.controller,
-    required this.hint,
-    required this.textInputType,
-    this.prefixIcon,
+  CustomizedTextField({
+    Key key,
+    @required this.controller,
+    @required this.hint,
+    @required this.textInputType,
+    this.codeCountry,
+    this.widget,
   }) : super(key: key);
-
+  bool codeCountry = false;
   final TextEditingController controller;
   final String hint;
   final TextInputType textInputType;
-  final Widget? prefixIcon;
+  final Widget widget;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class CustomizedTextField extends StatelessWidget {
       textAlign: TextAlign.end,
       style: TextStyle(color: Colors.black, fontSize: 18),
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(10.0),
+        contentPadding: EdgeInsets.all(15.0),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25.0),
           borderSide:
@@ -42,11 +43,11 @@ class CustomizedTextField extends StatelessWidget {
           borderSide: const BorderSide(color: Colors.red, width: 0.7),
           borderRadius: BorderRadius.circular(25.0),
         ),
-        prefixIcon: prefixIcon,
         filled: true,
         fillColor: Colors.white,
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey[400], fontSize: 18),
+        hintStyle: TextStyle(color: Colors.grey[500], fontSize: 18),
+        prefixIcon: widget,
       ),
       controller: controller,
     );

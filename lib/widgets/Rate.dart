@@ -1,5 +1,3 @@
-// ignore_for_file: import_of_legacy_library_into_null_safe
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -96,7 +94,7 @@ class _RateState extends State<Rate> {
                     ratingIsReadingOnly = true;
 
                   });
-                  showDialog(
+                  return showDialog(
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: Text("Rating Done"),

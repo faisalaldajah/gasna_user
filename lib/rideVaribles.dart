@@ -7,6 +7,6 @@ String driverCarDetails = '';
 
 String driverFullName = '';
 
-String? driverPhoneNumber;
+String driverPhoneNumber;
 
 String tripStatusDisplay = 'Driver is Arriving';

@@ -5,10 +5,10 @@ import '../brand_colors.dart';
 class TaxiOutlineButton extends StatelessWidget {
 
   final String title;
-  final VoidCallback onPressed;
+  final Function onPressed;
   final Color color;
 
-  TaxiOutlineButton({required this.title,required this.onPressed,required this.color});
+  TaxiOutlineButton({this.title, this.onPressed, this.color});
 
   @override
   Widget build(BuildContext context) {

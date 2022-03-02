@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:gasna_user/models/address.dart';
 class AppData extends ChangeNotifier{
 
-  Address? pickupAddress;
+  Address pickupAddress;
 
-  Address? destinationAddress;
+  Address destinationAddress;
 
   void updatePickupAddress(Address pickup){
     pickupAddress = pickup;

@@ -48,43 +48,43 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Random random = new Random();
   var finishCode;
   Completer<GoogleMapController> _controller = Completer();
-  GoogleMapController? mapController;
+  GoogleMapController mapController;
   double mapBottomPadding = 0;
   var driverType;
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> _polylines = {};
   Set<Marker> _markers = {};
   Set<Circle> _circles = {};
-  BitmapDescriptor? nearbyIcon;
+  BitmapDescriptor nearbyIcon;
   var promoCodeController = TextEditingController();
   var geoLocator = Geolocator();
-  Position? currentPosition;
-  DirectionDetails? tripDirectionDetails;
+  Position currentPosition;
+  DirectionDetails tripDirectionDetails;
 
   String appState = 'NORMAL';
 
   bool drawerCanOpen = true;
 
-  DatabaseReference? rideRef;
+  DatabaseReference rideRef;
 
-  Stream<DatabaseEvent>? rideSubscription;
+  StreamSubscription<Event> rideSubscription;
 
-  List<NearbyDriver>? availableDrivers;
+  List<NearbyDriver> availableDrivers;
 
   bool nearbyDriversKeysLoaded = false;
 
   List<PromoCode> promoCode = [];
 
   bool isRequestingLocationDetails = false;
-  String? homeAddress;
+  String homeAddress;
   void setupPositionLocator() async {
-    Position position = await Geolocator.getCurrentPosition(
+    Position position = await geoLocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation);
     currentPosition = position;
 
     LatLng pos = LatLng(position.latitude, position.longitude);
     CameraPosition cp = new CameraPosition(target: pos, zoom: 14);
-    mapController!.animateCamera(CameraUpdate.newCameraPosition(cp));
+    mapController.animateCamera(CameraUpdate.newCameraPosition(cp));
 
     // confirm location
     homeAddress = await HelperMethods.findCordinateAddress(position, context);
@@ -103,23 +103,24 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     });
   }
 
-  void getPromoCode() async {
+  void getPromoCode() {
     DatabaseReference promoCodeRef =
-        FirebaseDatabase.instance.ref().child('promo_code');
+        FirebaseDatabase.instance.reference().child('promo_code');
     PromoCode promo;
     var promoKeys;
     var promoValue;
-    DatabaseEvent event = await promoCodeRef.once();
-    var keys = event.snapshot.value;
-    // for (var key in keys) {
-    //   promoKeys = key;
-    //   promoValue = event.snapshot.value[key];
-    //   promo = PromoCode(
-    //     key: promoKeys,
-    //     value: promoValue,
-    //   );
-    //   promoCode.add(promo);
-    // }
+    promoCodeRef.once().then((DataSnapshot snapshot) {
+      var keys = snapshot.value.keys;
+      for (var key in keys) {
+        promoKeys = key;
+        promoValue = snapshot.value[key];
+        promo = PromoCode(
+          key: promoKeys,
+          value: promoValue,
+        );
+        promoCode.add(promo);
+      }
+    });
   }
 
   void promoCodeValid() {
@@ -164,7 +165,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    // getPromoCode();
+    getPromoCode();
   }
 
   @override
@@ -209,7 +210,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             child: GestureDetector(
               onTap: () {
                 if (drawerCanOpen) {
-                  scaffoldKey.currentState!.openDrawer();
+                  scaffoldKey.currentState.openDrawer();
                 } else {
                   resetApp();
                 }
@@ -345,8 +346,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                           title: 'أطلب الأن',
                           onPressed: () async {
                             //testCase();
-                            print(currentUserInfo!.homePlaceName);
-                            print(currentUserInfo!.governorate);
+                            print(currentUserInfo.homePlaceName);
+                            print(currentUserInfo.governorate);
                             finishCode = random.nextInt(9999);
                             if (await Permission
                                 .locationWhenInUse.serviceStatus.isEnabled) {
@@ -641,16 +642,17 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                             padding: EdgeInsets.only(
                                 left: 20, right: 15, top: 3, bottom: 3),
                             decoration: BoxDecoration(
-                                color: BrandColors.colorAccent,
+                                color: BrandColors.colorPrimaryDark,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Text(
                               'كود الرحلة:$finishCode',
                               textAlign: TextAlign.center,
                               textDirection: TextDirection.rtl,
                               style: TextStyle(
-                                  fontSize: 18,
-                                  fontFamily: 'Brand-Bold',
-                                  color: Colors.white),
+                                fontSize: 18,
+                                fontFamily: 'Brand-Bold',
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ],
@@ -665,7 +667,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                       Row(
                         children: [
                           CircleAvatar(
-                            backgroundColor: BrandColors.colorAccent,
+                            backgroundColor: BrandColors.colorPrimaryDark,
                             child: Icon(
                               Icons.person_outline,
                               color: Colors.white,
@@ -699,7 +701,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
                                 height: 50,
                                 width: 50,
                                 decoration: BoxDecoration(
-                                  color: BrandColors.colorAccent,
+                                  color: BrandColors.colorPrimaryDark,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular((25))),
                                   border: Border.all(
@@ -777,8 +779,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     var destination =
         Provider.of<AppData>(context, listen: false).pickupAddress;
 
-    var pickLatLng = LatLng(pickup!.latitude!, pickup.longitude!);
-    var destinationLatLng = LatLng(pickup.latitude!, pickup.longitude!);
+    var pickLatLng = LatLng(pickup.latitude, pickup.longitude);
+    var destinationLatLng = LatLng(pickup.latitude, pickup.longitude);
 
     showDialog(
         barrierDismissible: false,
@@ -798,7 +800,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
     PolylinePoints polylinePoints = PolylinePoints();
     List<PointLatLng> results =
-        polylinePoints.decodePolyline(thisDetails.encodedPoints!);
+        polylinePoints.decodePolyline(thisDetails.encodedPoints);
 
     polylineCoordinates.clear();
     if (results.isNotEmpty) {
@@ -848,7 +850,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           LatLngBounds(southwest: pickLatLng, northeast: destinationLatLng);
     }
 
-    mapController!.animateCamera(CameraUpdate.newLatLngBounds(bounds, 70));
+    mapController.animateCamera(CameraUpdate.newLatLngBounds(bounds, 70));
 
     Marker pickupMarker = Marker(
       markerId: MarkerId('pickup'),
@@ -862,7 +864,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       infoWindow:
-          InfoWindow(title: destination!.placeName, snippet: 'Destination'),
+          InfoWindow(title: destination.placeName, snippet: 'Destination'),
     );
 
     setState(() {
@@ -895,7 +897,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   void startGeofireListener() async {
     Geofire.initialize('driversAvailable');
     Geofire.queryAtLocation(
-            currentPosition!.latitude, currentPosition!.longitude, 20)!
+            currentPosition.latitude, currentPosition.longitude, 20)
         .listen((map) {
       if (map != null) {
         var callBack = map['callBack'];
@@ -939,11 +941,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     Set<Marker> tempMarkers = Set<Marker>();
 
     for (NearbyDriver driver in FireHelper.nearbyDriverList) {
-      LatLng driverPosition = LatLng(driver.latitude!, driver.longitude!);
+      LatLng driverPosition = LatLng(driver.latitude, driver.longitude);
       Marker thisMarker = Marker(
         markerId: MarkerId('driver${driver.key}'),
         position: driverPosition,
-        icon: nearbyIcon!,
+        icon: nearbyIcon,
         rotation: HelperMethods.generateRandomNumber(360),
       );
 
@@ -956,26 +958,26 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void createRideRequest() {
-    rideRef = FirebaseDatabase.instance.ref().child('rideRequest').push();
+    rideRef = FirebaseDatabase.instance.reference().child('rideRequest').push();
 
     var pickup = Provider.of<AppData>(context, listen: false).pickupAddress;
     var destination =
         Provider.of<AppData>(context, listen: false).pickupAddress;
 
     Map pickupMap = {
-      'latitude': pickup!.latitude.toString(),
+      'latitude': pickup.latitude.toString(),
       'longitude': pickup.longitude.toString(),
     };
 
     Map destinationMap = {
-      'latitude': destination!.latitude.toString(),
+      'latitude': destination.latitude.toString(),
       'longitude': destination.longitude.toString(),
     };
 
     Map rideMap = {
       'created_at': DateTime.now().toString(),
-      'rider_name': currentUserInfo!.fullName,
-      'rider_phone': currentUserInfo!.phone,
+      'rider_name': currentUserInfo.fullName,
+      'rider_phone': currentUserInfo.phone,
       'pickup_address': pickup.placeName,
       'destination_address': destination.placeName,
       'location': pickupMap,
@@ -987,14 +989,14 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       'finish_code': finishCode
     };
 
-    rideRef!.set(rideMap);
-    rideSubscription = rideRef!.onValue;
-    rideSubscription!.listen((event) async {
+    rideRef.set(rideMap);
+
+    rideSubscription = rideRef.onValue.listen((event) async {
       //check for null snapshot
       if (event.snapshot.value == null) {
         return;
       }
-      
+
       //get car details
       if (event.snapshot.value['car_details'] != null) {
         setState(() {
@@ -1023,6 +1025,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         double driverLng = double.parse(
             event.snapshot.value['driver_location']['longitude'].toString());
         LatLng driverLocation = LatLng(driverLat, driverLng);
+
         if (status == 'accepted') {
           updateToPickup(driverLocation);
         } else if (status == 'ontrip') {
@@ -1059,9 +1062,9 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
           if (response == 'close') {
             print('response: $response');
-            rideRef!.onDisconnect();
+            rideRef.onDisconnect();
             rideRef = null;
-            rideSubscription!.cancel();
+            rideSubscription.cancel();
             rideSubscription = null;
             resetApp();
           }
@@ -1081,11 +1084,11 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       isRequestingLocationDetails = true;
 
       var positionLatLng =
-          LatLng(currentPosition!.latitude, currentPosition!.longitude);
+          LatLng(currentPosition.latitude, currentPosition.longitude);
 
       var thisDetails = await HelperMethods.getDirectionDetails(
           driverLocation, positionLatLng);
-      //TODO
+
       if (thisDetails == null) {
         return;
       }
@@ -1104,10 +1107,10 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
 
       var destination =
           Provider.of<AppData>(context, listen: false).destinationAddress;
-
+      //TODO
       var destinationLatLng =
-          LatLng(destination!.latitude!, destination.longitude!);
-
+          LatLng(destination.latitude, destination.longitude);
+      print(destinationLatLng);
       var thisDetails = await HelperMethods.getDirectionDetails(
           driverLocation, destinationLatLng);
 
@@ -1124,7 +1127,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void cancelRequest() {
-    rideRef!.remove();
+    rideRef.remove();
 
     setState(() {
       appState = 'NORMAL';
@@ -1162,18 +1165,18 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   }
 
   void findDriver() {
-    if (availableDrivers!.length == 0) {
+    if (availableDrivers.length == 0) {
       cancelRequest();
       resetApp();
       noDriverFound();
       return;
     }
 
-    var driver = availableDrivers![0];
+    var driver = availableDrivers[0];
 
     notifyDriver(driver);
 
-    availableDrivers!.removeAt(0);
+    availableDrivers.removeAt(0);
 
     print(driver.key);
   }
@@ -1182,7 +1185,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     DatabaseReference driverTripRef = FirebaseDatabase.instance
         .reference()
         .child('drivers/${driver.key}/newtrip');
-    driverTripRef.set(rideRef!.key);
+    driverTripRef.set(rideRef.key);
 
     // Get and notify driver using token
     DatabaseReference tokenRef = FirebaseDatabase.instance
@@ -1194,7 +1197,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
         String token = snapshot.value.toString();
 
         // send notification to selected driver
-        HelperMethods.sendNotification(token, context, rideRef!.key);
+        HelperMethods.sendNotification(token, context, rideRef.key);
       } else {
         return;
       }

@@ -1,5 +1,5 @@
 class PromoCode {
-  String? key;
+  String key;
   var value;
 
   PromoCode({

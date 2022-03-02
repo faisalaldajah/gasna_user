@@ -1,0 +1,116 @@
+{
+    "districts": [
+        {
+            "districtID": 0,
+            "districtAR": "كرك",
+            "cities": [
+                {
+                    "regoinID": 0,
+                    "regoinAR": "لواء القطرانة"
+                },
+                {
+                    "regoinID": 1,
+                    "regoinAR": "لواء القصر"
+                },
+                {
+                    "regoinID": 2,
+                    "regoinAR": "لواء القصر"
+                },
+                {
+                    "regoinID": 3,
+                    "regoinAR": "لواء ألاغوار الجنوبية"
+                }
+            ]
+        },
+        {
+            "districtID": 1,
+            "districtAR": "معان",
+            "cities": [
+                {
+                    "regoinID": 0,
+                    "regoinAR": "لواء الجفر"
+                },
+                {
+                    "regoinID": 1,
+                    "regoinAR": "لواء الحسينية"
+                },
+                {
+                    "regoinID": 2,
+                    "regoinAR": "لواء معان"
+                },
+                {
+                    "regoinID": 3,
+                    "regoinAR": "لواء المريغة"
+                },
+                {
+                    "regoinID": 4,
+                    "regoinAR": "لواء ايل"
+                },
+                {
+                    "regoinID": 5,
+                    "regoinAR": "لواء أذرح"
+                },
+                {
+                    "regoinID": 6,
+                    "regoinAR": "لواء الشوبك"
+                },
+                {
+                    "regoinID": 7,
+                    "regoinAR": "لواء البتراء"
+                }
+            ]
+        },
+        {
+            "districtID": 2,
+            "districtAR": "الطفيلة",
+            "cities": [
+                {
+                    "regoinID": 0,
+                    "regoinAR": "لواء الطفيلة"
+                },
+                {
+                    "regoinID": 1,
+                    "regoinAR": "لواء الحسا"
+                },
+                {
+                    "regoinID": 2,
+                    "regoinAR": "لواء البصيرا"
+                }
+            ]
+        },
+        {
+            "districtID": 3,
+            "districtAR": "مادبا",
+            "cities": [
+                {
+                    "regoinID": 0,
+                    "regoinAR": "لواء الجرينة"
+                },
+                {
+                    "regoinID": 1,
+                    "regoinAR": "لواء الفيصلية"
+                },
+                {
+                    "regoinID": 2,
+                    "regoinAR": "لواء مادبا"
+                },
+                {
+                    "regoinID": 3,
+                    "regoinAR": "لواء ماعين"
+                },
+                {
+                    "regoinID": 4,
+                    "regoinAR": "لواء مليح"
+                },
+                {
+                    "regoinID": 5,
+                    "regoinAR": "لواء العريض"
+                },
+                {
+                    "regoinID": 6,
+                    "regoinAR": "لواء ذيبان"
+                }
+            ]
+        }
+    ]
+}

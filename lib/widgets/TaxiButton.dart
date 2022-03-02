@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class TaxiButton extends StatelessWidget {
   final String title;
   final Color color;
-  final VoidCallback onPressed;
+  final Function onPressed;
 
-  TaxiButton({required this.title,required this.onPressed,required this.color});
+  TaxiButton({this.title, this.onPressed, this.color});
 
   @override
   Widget build(BuildContext context) {
