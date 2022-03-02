@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_import, unused_import
+
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -27,10 +29,10 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
     // ignore: deprecated_member_use
-    scaffoldKey.currentState.showSnackBar(snackbar);
+    scaffoldKey.currentState!.showSnackBar(snackbar);
   }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   var emailController = TextEditingController();
 
@@ -47,29 +49,22 @@ class _LoginPageState extends State<LoginPage> {
         status: 'Logging you in',
       ),
     );
-    final User user = (await _auth
-            .signInWithEmailAndPassword(
+    UserCredential user =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
-    )
-            .catchError((ex) {
-      //check error and display message
-      Navigator.pop(context);
-      PlatformException thisEx = ex;
-      showSnackBar(thisEx.message);
-    }))
-        .user;
+    );
 
-    if (user != null) {
+    if (user.user!.email != null) {
       // verify login
       DatabaseReference userRef =
-          FirebaseDatabase.instance.reference().child('users/${user.uid}');
-      userRef.once().then((DataSnapshot snapshot) {
-        if (snapshot.value != null) {
-          Navigator.pushNamedAndRemoveUntil(
-              context, StartPage.id, (route) => false);
-        }
-      });
+          FirebaseDatabase.instance.ref().child('users/${user.user!.uid}');
+      // userRef.once().then((DataSnapshot snapshot) {
+      //   if (snapshot.value != null) {
+      //     Navigator.pushNamedAndRemoveUntil(
+      //         context, StartPage.id, (route) => false);
+      //   }
+      // });
     }
   }
 

@@ -1,5 +1,5 @@
 class Regions {
-  List<Districts> districts;
+  List<Districts>? districts;
 
   Regions({this.districts});
 
@@ -7,7 +7,7 @@ class Regions {
     if (json['districts'] != null) {
       districts = <Districts>[];
       json['districts'].forEach((v) {
-        districts.add(new Districts.fromJson(v));
+        districts!.add(new Districts.fromJson(v));
       });
     }
   }
@@ -15,16 +15,16 @@ class Regions {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.districts != null) {
-      data['districts'] = this.districts.map((v) => v.toJson()).toList();
+      data['districts'] = this.districts!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Districts {
-  int districtID;
-  String districtAR;
-  List<Cities> cities;
+  int? districtID;
+  String? districtAR;
+  List<Cities>? cities;
 
   Districts({this.districtID,  this.districtAR, this.cities});
 
@@ -34,7 +34,7 @@ class Districts {
     if (json['cities'] != null) {
       cities = <Cities>[];
       json['cities'].forEach((v) {
-        cities.add(new Cities.fromJson(v));
+        cities!.add(new Cities.fromJson(v));
       });
     }
   }
@@ -44,15 +44,15 @@ class Districts {
     data['districtID'] = this.districtID;
     data['districtAR'] = this.districtAR;
     if (this.cities != null) {
-      data['cities'] = this.cities.map((v) => v.toJson()).toList();
+      data['cities'] = this.cities!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Cities {
-  int cityID;
-  String cityAR;
+  int? cityID;
+  String? cityAR;
 
   Cities({this.cityID,  this.cityAR});
 

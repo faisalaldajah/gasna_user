@@ -1,7 +1,7 @@
 class NearbyDriver{
-  String key;
-  double latitude;
-  double longitude;
+  String? key;
+  double? latitude;
+  double? longitude;
 
   NearbyDriver({
     this.key,

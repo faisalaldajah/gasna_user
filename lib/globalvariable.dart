@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,9 +18,9 @@ final CameraPosition googlePlex = CameraPosition(
   zoom: 14.4746,
 );
 
-User currentFirebaseUser;
+User? currentFirebaseUser;
 List<Cities> citys = [];
-UserDetails currentUserInfo;
+UserDetails? currentUserInfo;
 //make it to call list view bulder and the switch will do the rest of work
 int numberOfGas = 1;
 

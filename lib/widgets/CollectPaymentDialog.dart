@@ -7,9 +7,9 @@ import 'TaxiButton.dart';
 class CollectPayment extends StatelessWidget {
   final String paymentMethod;
   final double fares;
-  final finishCode;
+  final String finishCode;
 
-  CollectPayment({this.paymentMethod, this.fares,this.finishCode});
+  CollectPayment({required this.paymentMethod,required this.fares,required this.finishCode});
 
   @override
   Widget build(BuildContext context) {

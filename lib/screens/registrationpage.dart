@@ -27,10 +27,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
     // ignore: deprecated_member_use
-    scaffoldKey.currentState.showSnackBar(snackbar);
+    scaffoldKey.currentState!.showSnackBar(snackbar);
   }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   var fullNameController = TextEditingController();
 
@@ -50,26 +50,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
 
-    final User user = (await _auth
-            .createUserWithEmailAndPassword(
+    final UserCredential user = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
       email: emailController.text,
       password: passwordController.text,
     )
-            .catchError((ex) {
+        .catchError((ex) {
       //check error and display message
       Navigator.pop(context);
       PlatformException thisEx = ex;
-      showSnackBar(thisEx.message);
-    }))
-        .user;
+      // showSnackBar(thisEx.message);
+    });
 
     Navigator.pop(context);
     // check if user registration is successful
-    if (user != null) {
-      DatabaseReference newUserRef =
-          FirebaseDatabase.instance.reference();
-
-      
+    if (user.user!.email != null) {
+      DatabaseReference newUserRef = FirebaseDatabase.instance.ref();
 
       //Prepare data to be saved on users table
       Map userMap = {
@@ -78,7 +74,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         'phone': phoneController.text,
       };
 
-      newUserRef.child('users/${user.uid}').set(userMap);
+      newUserRef.child('users/${user.user!.uid}').set(userMap);
 
       //Take the user to the mainPage
       Navigator.pushNamedAndRemoveUntil(context, MainPage.id, (route) => false);
@@ -231,7 +227,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       Navigator.pushNamedAndRemoveUntil(
                           context, LoginPage.id, (route) => false);
                     },
-                    child: Text('لديك حساب بالفعل؟ تسجيل الدخول ',style: TextStyle(color: Colors.black),)),
+                    child: Text(
+                      'لديك حساب بالفعل؟ تسجيل الدخول ',
+                      style: TextStyle(color: Colors.black),
+                    )),
               ],
             ),
           ),

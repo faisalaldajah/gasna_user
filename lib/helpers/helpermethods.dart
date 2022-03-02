@@ -26,17 +26,17 @@ class HelperMethods {
   static void getCurrentUserInfo(context) async {
     // ignore: await_only_futures
     currentFirebaseUser = await FirebaseAuth.instance.currentUser;
-    String userid = currentFirebaseUser.uid;
+    String userid = currentFirebaseUser!.uid;
 
     DatabaseReference userRef =
-        FirebaseDatabase.instance.reference().child('users/$userid');
-    userRef.once().then((DataSnapshot snapshot) {
-      if (snapshot.value != null) {
-        currentUserInfo = UserDetails.fromSnapshot(snapshot);
-        Navigator.pushNamedAndRemoveUntil(
-            context, MainPage.id, (route) => false);
-      }
-    });
+        FirebaseDatabase.instance.ref().child('users/$userid');
+
+    DatabaseEvent event = await userRef.once();
+
+    if (event.snapshot.value != null) {
+      currentUserInfo = UserDetails.fromSnapshot(event.snapshot);
+      Navigator.pushNamedAndRemoveUntil(context, MainPage.id, (route) => false);
+    }
   }
 
   static Future<String> findCordinateAddress(Position position, context) async {
@@ -48,8 +48,8 @@ class HelperMethods {
       return placeAddress;
     }
 
-    String url =
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey';
+    Uri url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$mapKey');
 
     var response = await RequestHelper.getRequest(url);
 
@@ -71,14 +71,15 @@ class HelperMethods {
 
   static Future<DirectionDetails> getDirectionDetails(
       LatLng startPosition, LatLng endPosition) async {
-    String url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=${startPosition.latitude},${startPosition.longitude}&destination=${endPosition.latitude},${endPosition.longitude}&mode=driving&key=$mapKey';
+    Uri url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${startPosition.latitude},${startPosition.longitude}&destination=${endPosition.latitude},${endPosition.longitude}&mode=driving&key=$mapKey');
 
     var response = await RequestHelper.getRequest(url);
+    //TODO
 
-    if (response == 'failed') {
-      return null;
-    }
+    // if (response == 'failed') {
+    //   return;
+    // }
 
     DirectionDetails directionDetails = DirectionDetails();
 
@@ -137,7 +138,7 @@ class HelperMethods {
 
     Map notificationMap = {
       'title': 'لديك طلبية جديدة',
-      'body': 'Destination, ${destination.placeName}'
+      'body': 'Destination, ${destination!.placeName}'
     };
 
     Map dataMap = {
@@ -154,8 +155,10 @@ class HelperMethods {
       'to': token
     };
 
-    var response = await http.post('https://fcm.googleapis.com/fcm/send',
-        headers: headerMap, body: jsonEncode(bodyMap));
+    var response = await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: headerMap,
+        body: jsonEncode(bodyMap));
 
     print(response.body);
   }

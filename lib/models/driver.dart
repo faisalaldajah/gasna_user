@@ -1,18 +1,19 @@
+// ignore: unused_import
 import 'package:firebase_database/firebase_database.dart';
 
 class Driver {
-  String fullName;
-  String email;
-  String phone;
-  String id;
-  String governorate;
-  String place;
-  String agentName;
+  String? fullName;
+  String? email;
+  String? phone;
+  String? id;
+  String? governorate;
+  String? place;
+  String? agentName;
   var driversIsAvailable;
-  String amount;
-  String status;
-  String currentAmount;
-  String driverType;
+  String? amount;
+  String? status;
+  String? currentAmount;
+  String? driverType;
 
 
   Driver({
@@ -30,7 +31,7 @@ class Driver {
     this.driverType,
   });
 
-  Driver.fromSnapshot(DataSnapshot snapshot) {
+  Driver.fromSnapshot(snapshot) {
     id = snapshot.key;
     phone = snapshot.value['phone'];
     email = snapshot.value['email'];

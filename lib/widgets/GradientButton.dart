@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import '../brand_colors.dart';
 
-class GradientButton extends StatefulWidget {
+class GradientButton extends StatelessWidget {
   final String title;
-  final Function onPressed;
+  final VoidCallback onPressed;
 
-  GradientButton({this.title, this.onPressed});
+  GradientButton({required this.title,required this.onPressed});
 
-  @override
-  _GradientButtonState createState() => _GradientButtonState();
-}
 
-class _GradientButtonState extends State<GradientButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,8 +19,9 @@ class _GradientButtonState extends State<GradientButton> {
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [
-              BrandColors.colorPrimaryDark,
-              BrandColors.colorPrimaryDark,
+              BrandColors.colorAccent,
+              BrandColors.colorAccent1,
+              BrandColors.colorAccent,
             ]),
         boxShadow: [
           BoxShadow(
@@ -35,9 +32,9 @@ class _GradientButtonState extends State<GradientButton> {
         ],
       ),
       child: TextButton(
-        onPressed: widget.onPressed,
+        onPressed: onPressed,
         child: Text(
-          widget.title,
+          title,
           textDirection: TextDirection.rtl,
           style: TextStyle(fontSize: 25, color: Colors.white),
         ),

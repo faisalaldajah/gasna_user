@@ -1,11 +1,11 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gasna_user/globalvariable.dart';
 import 'package:gasna_user/screens/PhoneLogin/screens/loginpage.dart';
 import 'package:gasna_user/screens/Support.dart';
-import 'package:gasna_user/screens/searchpage.dart';
 import 'package:gasna_user/styles/styles.dart';
-import 'package:gasna_user/widgets/Rate.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:share/share.dart';
 
@@ -13,7 +13,7 @@ import 'BrandDivier.dart';
 
 class TheDrawer extends StatelessWidget {
   const TheDrawer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -40,7 +40,7 @@ class TheDrawer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      currentUserInfo.fullName,
+                      currentUserInfo!.fullName!,
                       style: TextStyle(fontSize: 20, fontFamily: 'Brand-Bold'),
                       overflow: TextOverflow.ellipsis,
                     ),

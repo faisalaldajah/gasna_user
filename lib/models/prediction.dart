@@ -1,7 +1,7 @@
 class Prediction{
-  String placeId;
-  String mainText;
-  String secondaryText;
+  String? placeId;
+  String? mainText;
+  String? secondaryText;
 
   Prediction({
     this.placeId,
